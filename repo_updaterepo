@@ -13,7 +13,7 @@ dest="/var/www/downloads_test/addons"
 #done
 
 for (( i=0; i<${#repos[*]}; i++ )); do
-  for j in `/usr/local/bin/repo_gitbridge -q -r ${gitrepo}/${repos[$i]} -d ${dest} -i`; do
+  for j in `/usr/local/bin/repo_gitbridge -k 3 -q -r ${gitrepo}/${repos[$i]} -d ${dest} -i`; do
     for (( k=0; k<${#touchedbranches[*]}; k++ )); do
       if [ "${touchedbranches[$k]}" = "${j}" ]; then
         touchedbranches[k]=""
