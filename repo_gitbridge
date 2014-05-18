@@ -102,7 +102,6 @@ function zipdir {
       if [ "$keepold" = "0" ]; then
         local cleanstales=`ls ${outdir}/${branch}/${foldername}/${id}-*.zip ${outdir}/${branch}/${foldername}/changelog-*.txt 2>/dev/null | grep -v ${version}`
       else
-        local cleanstales=`ls ${outdir}/${branch}/${foldername}/changelog-*.txt 2>/dev/null | grep -v ${version}`
         cleanupzips ${outdir}/${branch}/${foldername} ${id} ${version}
       fi
       [ "$quiet" = "0" ] && [ -n "$cleanstales" ] && echo "removing $cleanstales"
@@ -142,11 +141,17 @@ function cleanupzips {
   local id=$2
   local curversion=$3
   local n=0
-  allzips=( $(ls ${folder}/${id}-*.zip | grep -v ${curversion}) )
+  local allzips=( $(ls ${folder}/${id}-*.zip | grep -v ${curversion}) )
+  local allchangelogs=( $(ls ${folder}/changelog-*.txt | grep -v ${curversion}) )
   (( n=${#allzips[@]} - ${keepold} ))
+  (( c=${#allchangelogs[@]} - ${keepold} ))
   if [ $n -gt 0 ]; then
     [ "$quiet" = "0" ] && echo "removing ${allzips[@]:0:$n}"
     rm -f ${allzips[@]:0:$n}
+  fi
+  if [ $c -gt 0 ]; then
+    [ "$quiet" = "0" ] && echo "removing ${allchangelogs[@]:0:$n}"
+    rm -f ${allchangelogs[@]:0:$n}
   fi
 }
 
